@@ -9,17 +9,33 @@
 		<h1>TranscriptRealtime</h1>
 		<div id="result"></div>
 		<script>
-			window.alert("test");
-
 			try {
+				let dom_result = document.getElementById("result");
+
 				SpeechRecognition = webkitSpeechRecognition || SpeechRecognition;
 				const recognition = new SpeechRecognition();
 
 				recognition.continuous = true;
+				recognition.interimResults = true;
+				recognition.lang = "en-US";
+
+				let finalTranscript = "";
 
 				recognition.onresult = (event) => {
-					const dom_result = document.getElementById("result");
-					dom_result.innerHTML += event.results;
+					let interimTranscript = "";
+					for (let i = event.resultIndex; i < event.results.length; i++) {
+						let transcript = event.results[i][0].transcript;
+						if (event.results[i].isFinal) {
+							finalTranscript += transcript;
+						} else {
+							interimTranscript = transcript;
+						}
+					}
+					dom_result.innerHTML =
+						finalTranscript +
+						'<i style="color:#ddd;">' +
+						interimTranscript +
+						"</i>";
 				};
 
 				recognition.start();
