@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,17 +9,21 @@
 		<h1>TranscriptRealtime</h1>
 		<div id="result"></div>
 		<script>
-			SpeechRecognition = webkitSpeechRecognition || SpeechRecognition;
-			const recognition = new SpeechRecognition();
+			try {
+				SpeechRecognition = webkitSpeechRecognition || SpeechRecognition;
+				const recognition = new SpeechRecognition();
 
-			recognition.continuous = true;
+				recognition.continuous = true;
 
-			recognition.onresult = (event) => {
-				const dom_result = document.getElementById("result");
-				dom_result.innerHTML += event.results;
-			};
+				recognition.onresult = (event) => {
+					const dom_result = document.getElementById("result");
+					dom_result.innerHTML += event.results;
+				};
 
-			recognition.start();
+				recognition.start();
+			} catch (e) {
+				window.alert(e);
+			}
 		</script>
 	</body>
 </html>
