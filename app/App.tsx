@@ -3,6 +3,7 @@ import { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import { Audio } from "expo-av";
+import Voice from "react-native-voice";
 
 import Header from "./src/components/Header";
 import LanguageSelectionList from "./src/components/LanguageSelectionList";
@@ -14,37 +15,25 @@ export default function App() {
   const [recording, setRecording] = useState(null);
   const [isRecording, setIsRecording] = useState<boolean>(false);
 
+  // Voice.onSpeechResults = (event) => {
+  //   setText(event.value);
+  // };
+
   const handleStart = async () => {
     if (!language) {
       window.alert("言語を選択してください");
       return false;
     }
 
-    try {
-      // パーミッションチェック
-      await Audio.requestPermissionsAsync();
-      await Audio.setAudioModeAsync({
-        allowsRecordingIOS: true,
-        playsInSilentModeIOS: true,
-      });
-      // 録音開始
-      const { recording } = await Audio.Recording.createAsync(
-        Audio.RecordingOptionsPresets.HIGH_QUALITY,
-      );
-      setRecording(recording);
-    } catch (error) {
-      console.log(error);
-    }
+    const recognition = new SpeechRecognition();
   };
 
   const handleStop = async () => {
-    setRecording(undefined);
-    await recording.stopAndUnloadAsync();
-    await Audio.setAudioModeAsync({
-      allowsRecordingIOS: false,
-    });
-    const uri = recording.getURI();
-    console.log("Recording stopped and stored at", uri);
+    try {
+      await Voice.stop();
+    } catch (error) {
+      console.error("Speech recognition error:", error);
+    }
   };
 
   return (
